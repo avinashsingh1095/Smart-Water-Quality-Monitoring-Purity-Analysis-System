@@ -1,0 +1,21 @@
+@import "tailwindcss";
+html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+body { margin: 0; color: #e8f1fb; font-family: Inter, system-ui, sans-serif;
+  background: radial-gradient(1000px 500px at 80% -10%, #0e3a5c55, transparent), radial-gradient(800px 500px at -10% 30%, #0b4a5a40, transparent), #060d1c; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .5;
+  background-image: linear-gradient(#1e3a5f22 1px, transparent 1px), linear-gradient(90deg, #1e3a5f22 1px, transparent 1px); background-size: 40px 40px; }
+.glass { background: #0d1a31aa; border: 1px solid #5eead433; border-color: #7dd3fc26; border-radius: 1rem; backdrop-filter: blur(8px); box-shadow: 0 8px 30px #0006; }
+.flow-v { width: 2px; height: 30px; margin: 0 auto; color: #22d3ee; background: repeating-linear-gradient(to bottom, currentColor 0 6px, transparent 6px 12px); background-size: 2px 12px; animation: fv .7s linear infinite; }
+.flow-v.sig { color: #4ade80; }
+.flow-h { height: 2px; flex: 1; min-width: 24px; background: repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 12px); background-size: 12px 2px; animation: fh .7s linear infinite; }
+@keyframes fv { to { background-position: 0 12px; } }
+@keyframes fh { to { background-position: 12px 0; } }
+.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .9rem; border-radius: .6rem; border: 1px solid #7dd3fc40; background: #0f2744; font-size: .85rem; cursor: pointer; }
+.btn:hover { background: #14365e; } .btn.on { background: #0e7490; border-color: #22d3ee; }
+:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .flow-v, .flow-h { animation: none; } }
+@media print {
+  body * { visibility: hidden; } #docs, #docs * { visibility: visible; }
+  #docs { position: absolute; left: 0; top: 0; width: 100%; } #docs * { color: #000 !important; background: #fff !important; border-color: #999 !important; }
+  .noprint { display: none !important; }
+}
