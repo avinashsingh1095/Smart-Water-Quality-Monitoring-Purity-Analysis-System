@@ -417,26 +417,55 @@ export default function App() {
       <main><Hero sim={sim} /><Architecture /><FilterSim /><Sensors sim={sim} /><Firmware /><Dashboard sim={sim} /><Wiring /><Calibration /><Testing /><Docs /></main>
       <footer className="border-t border-white/10 mt-10 py-10 text-sm text-slate-400 noprint px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-[120px_1fr] gap-6 items-center rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_35px_rgba(14,165,233,0.08)]">
-            <img src={profilePhoto} alt="Avinash Paviya" className="w-28 h-28 rounded-full object-cover border-2 border-cyan-400/60 shadow-lg shadow-cyan-500/10 mx-auto md:mx-0" />
-            <div>
-              <p className="text-xl font-semibold text-white">Avinash Paviya</p>
-              <p className="text-cyan-300 font-medium mt-1">Engineering Student &amp; Project Developer</p>
-              <p className="text-slate-400 mt-1">MITS, Gwalior, Madhya Pradesh, India</p>
-              <p className="mt-3 max-w-3xl text-slate-300">
-                I am Avinash Paviya, a B.Tech student in Electrical and Computer Engineering at Madhav Institute of Technology &amp; Science (MITS), Gwalior. I am interested in programming, embedded systems, IoT, data analysis, and web development.
-              </p>
-              <p className="mt-2 max-w-3xl text-slate-300">
-                I enjoy building practical, technology-driven projects that connect engineering concepts with real-world applications. Through my academic projects, I aim to develop my technical skills, explore innovative solutions, and create useful digital experiences.
-              </p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {[
-                  "Electrical & Computer Engineering",
-                  "Python",
-                  "IoT & Embedded Systems",
-                  "Web Development",
-                  "Data Analysis"
-                ].map(skill => <Pill key={skill}>{skill}</Pill>)}
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-cyan-300 mb-3">Project team</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-[120px_1fr] gap-6 items-center rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_35px_rgba(14,165,233,0.08)]">
+              <img src={profilePhoto} alt="Avinash Paviya" className="w-28 h-28 rounded-full object-cover border-2 border-cyan-400/60 shadow-lg shadow-cyan-500/10 mx-auto md:mx-0" />
+              <div>
+                <p className="text-xl font-semibold text-white">Avinash Paviya</p>
+                <p className="text-cyan-300 font-medium mt-1">Engineering Student &amp; Project Developer</p>
+                <p className="text-slate-400 mt-1">MITS, Gwalior, Madhya Pradesh, India</p>
+                <p className="mt-3 max-w-3xl text-slate-300">
+                  I am Avinash Paviya, a B.Tech student in Electrical and Computer Engineering at Madhav Institute of Technology &amp; Science (MITS), Gwalior. I am interested in programming, embedded systems, IoT, data analysis, and web development.
+                </p>
+                <p className="mt-2 max-w-3xl text-slate-300">
+                  I enjoy building practical, technology-driven projects that connect engineering concepts with real-world applications. Through my academic projects, I aim to develop my technical skills, explore innovative solutions, and create useful digital experiences.
+                </p>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {[
+                    "Electrical & Computer Engineering",
+                    "Python",
+                    "IoT & Embedded Systems",
+                    "Web Development",
+                    "Data Analysis"
+                  ].map(skill => <Pill key={skill}>{skill}</Pill>)}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-[120px_1fr] gap-6 items-center rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_35px_rgba(14,165,233,0.08)]">
+              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-cyan-500 to-blue-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-cyan-300/60 shadow-lg shadow-cyan-500/10 mx-auto md:mx-0">AS</div>
+              <div>
+                <p className="text-xl font-semibold text-white">Aditya Sharma</p>
+                <p className="text-cyan-300 font-medium mt-1">Software Developer &amp; Engineering Student</p>
+                <p className="text-slate-400 mt-1">MITS, Gwalior, Madhya Pradesh, India</p>
+                <p className="mt-3 max-w-3xl text-slate-300">
+                  I am Aditya Sharma, a B.Tech student in Electrical and Computer Engineering at Madhav Institute of Technology &amp; Science (MITS), Gwalior. I am interested in software development, programming, web development, Python, data science, and database management.
+                </p>
+                <p className="mt-2 max-w-3xl text-slate-300">
+                  I enjoy developing practical software solutions and building user-friendly web applications. I am passionate about learning new technologies, improving my coding skills, and creating innovative digital solutions that solve real-world problems.
+                </p>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {[
+                    "Software Development",
+                    "Python",
+                    "Web Development",
+                    "Data Science",
+                    "Database Management"
+                  ].map(skill => <Pill key={skill}>{skill}</Pill>)}
+                </div>
               </div>
             </div>
           </div>
