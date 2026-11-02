@@ -14,7 +14,9 @@ Frontend-only React + Vite + TypeScript + Tailwind v4 educational simulation. No
 
 ## Structure
 - `src/firmware.ts` — exact Arduino sketch shown in the firmware explorer.
-- `src/App.tsx` — all sections (architecture, filtration canvas, sensors, firmware, dashboard, wiring, calibration, testing, docs).
-- `src/index.css` — theme, flow animations, print and reduced-motion styles.
+- `src/App.tsx` — page sections, architecture, sensors, firmware, dashboard, wiring, calibration, testing and docs.
+- `src/FilterVisualization.tsx` — isolated SVG whole-house filter housing, cartridge and measurement-system visualization.
+- `src/assets/aditya-sharma.png` — supplied profile photo used in the team section.
+- `src/index.css` — theme, flow and filter animations, print and reduced-motion styles.
 
 Disclaimer: educational simulation only; does not certify water quality or drinking-water safety.

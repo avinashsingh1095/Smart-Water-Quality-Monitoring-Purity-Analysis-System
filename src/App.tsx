@@ -3,7 +3,9 @@ import { motion, MotionConfig } from "framer-motion";
 import { Menu, X, Play, Pause, RotateCcw, Copy, Search, Download, Printer, AlertTriangle, ChevronRight, ChevronLeft, Check, Droplets } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from "recharts";
 import { FIRMWARE } from "./firmware";
+import FilterVisualization from "./FilterVisualization";
 import profilePhoto from "./assets/avinash-paviya.png";
+import adityaProfilePhoto from "./assets/aditya-sharma.png";
 
 const SIM = "SIMULATED DATA — NOT CONNECTED TO PHYSICAL SENSORS";
 const NAV = [["hero", "Home"], ["architecture", "Architecture"], ["filter", "Filtration"], ["sensors", "Sensors"], ["firmware", "Firmware"], ["dashboard", "Dashboard"], ["wiring", "Wiring"], ["calibration", "Calibration"], ["testing", "Testing"], ["docs", "Docs"]];
@@ -88,7 +90,7 @@ function Hero({ sim }: { sim: Sim }) {
 /* ---------- B. architecture ---------- */
 const INFO: Record<string, Record<string, string>> = {
   water: { Title: "Raw Water", Purpose: "The untreated sample to be examined.", "Working principle": "Water enters the filtration unit by gravity or manual pouring (design-dependent).", Input: "Sample water", Output: "Water to the filtration unit", Connections: "Water path only; no electrical connection.", Limitations: "Composition is unknown until measured; this site does not assess safety." },
-  filter: { Title: "Filtration Unit", Purpose: "Illustrative multi-layer media to reduce particulates.", "Working principle": "Water passes mesh, carbon, sand and gravel layers (see simulator).", Input: "Raw water", Output: "Filtered water", Connections: "Water path only. Sensors do NOT control the filter.", Limitations: "Does not remove every contaminant; actual cartridge design may differ." },
+  filter: { Title: "Whole-house filter housing", Purpose: "Encloses and supports a replaceable cartridge in the physical water-treatment stage.", "Working principle": "A generic cartridge is shown; the exact media, internal path and flow direction depend on the selected housing and cartridge.", Input: "Raw water", Output: "Water leaving the housing for a sample point", Connections: "Water path only. Sensors measure a sample and do NOT control this filter.", Limitations: "Filtration performance depends on the specified cartridge and conditions; this visualization does not claim complete contaminant removal or drinking-water safety." },
   sample: { Title: "Water Sample", Purpose: "The portion presented to the sensors.", "Working principle": "A separate sampling arrangement may be needed so the same sample is measured before and after filtration.", Input: "Raw or filtered water", Output: "Water in contact with probes", Connections: "Water path to the three sensor probes.", Limitations: "Temperature, bubbles and probe fouling affect readings." },
   ph: { Title: "pH Sensor", Purpose: "Indicates acidity/alkalinity.", "Working principle": "Probe voltage is conditioned by a board into an analog output.", Input: "Water sample", Output: "Analog voltage (Po)", Connections: "Po → GPIO 34 via verified safe conditioning/divider; V+, G.", Limitations: "Needs buffer-solution calibration; ADC counts are not pH." },
   tds: { Title: "TDS Sensor", Purpose: "Estimates dissolved solids via an electrical property.", "Working principle": "Module measures conductivity-related signal; ppm conversion is sensor/temperature dependent.", Input: "Water sample", Output: "Analog voltage (A)", Connections: "A → GPIO 35 after output-voltage verification.", Limitations: "Needs reference solution and temperature compensation." },
@@ -110,7 +112,7 @@ function Architecture() {
       <div className="grid lg:grid-cols-2 gap-6">
         <div className="glass p-5 flex flex-col items-center">
           <div className="flex gap-4 text-xs mb-3"><span className="text-cyan-300">━ Water flow</span><span className="text-green-400">┅ Electrical signal</span></div>
-          <div className="flex flex-wrap gap-2 justify-center"><B w k="water" label="RAW WATER" /><B w k="filter" label="FILTRATION UNIT" /><B w k="sample" label="WATER SAMPLE" /></div>
+          <div className="flex flex-wrap gap-2 justify-center"><B w k="water" label="RAW WATER" /><B w k="filter" label="FILTER HOUSING" sub="Physical treatment stage" /><B w k="sample" label="WATER SAMPLE" /></div>
           <Ar label="Sample presented to probes" />
           <div className="flex flex-wrap gap-2 justify-center"><B k="ph" label="pH Sensor" sub="→ GPIO 34" /><B k="tds" label="TDS Sensor" sub="→ GPIO 35" /><B k="turb" label="Turbidity Sensor" sub="→ GPIO 32" /></div>
           <Ar sig label="Analog Signal → ADC Reading" />
@@ -127,55 +129,7 @@ function Architecture() {
   );
 }
 
-/* ---------- C. filtration simulator ---------- */
-const LAYERS: [string, number, number, string, string][] = [
-  ["Mesh / pre-filter", 40, 70, "#475569", "Intended to catch large particles and debris."],
-  ["Activated carbon", 70, 160, "#1e293b", "Adsorbs some dissolved organics and odour-causing compounds."],
-  ["Fine sand", 160, 250, "#a68a5b", "Intended to trap finer suspended particles."],
-  ["Gravel support", 250, 330, "#78716c", "Supports the media above and spreads flow."],
-  ["Filtered-water outlet", 330, 420, "#0e3a52", "Collection point for water that has passed the layers."],
-];
-function FilterSim() {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const [run, setRun] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  const [sp, setSp] = useState(1); const [lab, setLab] = useState(true); const [rs, setRs] = useState(0);
-  const st = useRef({ run, sp, lab }); st.current = { run, sp, lab };
-  useEffect(() => {
-    const c = ref.current!; const g = c.getContext("2d")!; const W = 560, H = 420; const V = [2.4, 1, .7, 1.2, 2.2];
-    const mk = (top: boolean) => ({ x: 130 + Math.random() * 300, y: top ? 0 : Math.random() * H });
-    let P = Array.from({ length: 100 }, () => mk(false)); let raf = 0;
-    const frame = () => {
-      const { run, sp, lab } = st.current; g.clearRect(0, 0, W, H);
-      LAYERS.forEach(([n, a, b, col]) => { g.fillStyle = col; g.fillRect(120, a, 320, b - a); if (lab) { g.fillStyle = "#e2e8f0"; g.font = "13px sans-serif"; g.fillText(n, 450, (a + b) / 2 + 4); } });
-      g.fillStyle = "#94a3b8"; g.font = "12px sans-serif"; g.fillText("Raw water in ↓", 240, 14);
-      P = P.map(p => {
-        const li = LAYERS.findIndex(l => p.y >= l[1] && p.y < l[2]); const v = V[Math.max(0, li)] ?? 2;
-        if (run) { p.y += v * sp; p.x += (Math.random() - .5) * (li >= 1 ? 1.2 : .3); p.x = Math.min(430, Math.max(130, p.x)); }
-        if (p.y >= H) return mk(true);
-        g.beginPath(); g.fillStyle = p.y < 70 ? "#d6a96a" : p.y < 330 ? "#7dd3fc" : "#67e8f9"; g.globalAlpha = p.y < 330 ? .85 : .6;
-        g.arc(p.x, p.y, p.y < 70 ? 3.2 : p.y < 330 ? 2.4 : 1.6, 0, 7); g.fill(); g.globalAlpha = 1; return p;
-      });
-      raf = requestAnimationFrame(frame);
-    };
-    frame(); return () => cancelAnimationFrame(raf);
-  }, [rs]);
-  return (
-    <Sec id="filter" title="Filtration simulator" sub="Illustrative filtration model. Layers are intended to reduce some particulates; they do not remove every contaminant and the output is not claimed to be safe to drink. The actual housing/cartridge may differ, and sensors do not control the filter.">
-      <div className="grid lg:grid-cols-[580px_1fr] gap-6">
-        <div className="glass p-3 overflow-x-auto"><canvas ref={ref} width={560} height={420} role="img" aria-label="Animated cross-section of an illustrative filter" className="max-w-full" /></div>
-        <div>
-          <div className="flex flex-wrap gap-2 mb-4">
-            <button className="btn on" onClick={() => setRun(!run)}>{run ? <Pause size={14} /> : <Play size={14} />}{run ? "Pause" : "Start"}</button>
-            <button className="btn" onClick={() => setRs(r => r + 1)}><RotateCcw size={14} />Reset</button>
-            {([["Slow", .5], ["Normal", 1], ["Fast", 2]] as const).map(([n, v]) => <button key={n} className={`btn ${sp === v ? "on" : ""}`} onClick={() => setSp(v)}>{n}</button>)}
-            <button className="btn" onClick={() => setLab(!lab)}>{lab ? "Hide" : "Show"} labels</button>
-          </div>
-          <ul className="space-y-2 text-sm">{LAYERS.map(l => <li key={l[0]} className="glass p-3"><b className="text-cyan-300">{l[0]}</b><br /><span className="text-slate-400">{l[4]}</span></li>)}</ul>
-        </div>
-      </div>
-    </Sec>
-  );
-}
+/* ---------- C. filtration visualization ---------- */
 
 /* ---------- D. sensors ---------- */
 const SENS = [
@@ -414,7 +368,7 @@ export default function App() {
         </div>
         {open && <div className="lg:hidden px-4 pb-3 grid grid-cols-2 gap-2">{NAV.map(([id, l]) => <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="btn">{l}</a>)}</div>}
       </nav>
-      <main><Hero sim={sim} /><Architecture /><FilterSim /><Sensors sim={sim} /><Firmware /><Dashboard sim={sim} /><Wiring /><Calibration /><Testing /><Docs /></main>
+      <main><Hero sim={sim} /><Architecture /><FilterVisualization /><Sensors sim={sim} /><Firmware /><Dashboard sim={sim} /><Wiring /><Calibration /><Testing /><Docs /></main>
       <footer className="border-t border-white/10 mt-10 py-10 text-sm text-slate-400 noprint px-4">
         <div className="max-w-6xl mx-auto">
           <div className="mb-6">
@@ -446,7 +400,9 @@ export default function App() {
             </div>
 
             <div className="grid md:grid-cols-[120px_1fr] gap-6 items-center rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_35px_rgba(14,165,233,0.08)]">
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-cyan-500 to-blue-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-cyan-300/60 shadow-lg shadow-cyan-500/10 mx-auto md:mx-0">AS</div>
+              <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-cyan-300/60 shadow-lg shadow-cyan-500/10 mx-auto md:mx-0">
+                <img src={adityaProfilePhoto} alt="Aditya Sharma" className="w-full h-full object-cover scale-[2.1]" />
+              </div>
               <div>
                 <p className="text-xl font-semibold text-white">Aditya Sharma</p>
                 <p className="text-cyan-300 font-medium mt-1">Software Developer &amp; Engineering Student</p>

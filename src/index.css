@@ -19,3 +19,44 @@ body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-i
   #docs { position: absolute; left: 0; top: 0; width: 100%; } #docs * { color: #000 !important; background: #fff !important; border-color: #999 !important; }
   .noprint { display: none !important; }
 }
+.filter-visual-stage { min-height: 3.5rem; }
+.filter-assembly { display: block; min-height: 280px; overflow: visible; }
+.filter-assembly text { fill: #a6cfe1; font: 600 10px Inter, system-ui, sans-serif; letter-spacing: .08em; }
+.filter-assembly text.filter-svg-small { fill: #d3e6ee; font-size: 8px; letter-spacing: .04em; }
+.filter-part { cursor: pointer; }
+.filter-part:focus-visible { outline: none; filter: drop-shadow(0 0 7px #22d3ee); }
+.filter-housing > path:first-child, .filter-cartridge { transition: fill-opacity .3s ease, filter .3s ease; }
+.filter-assembly.cutaway .filter-housing > path:first-child { fill-opacity: .3; stroke-opacity: 1; }
+.filter-assembly.cutaway .filter-cartridge { filter: drop-shadow(0 0 8px #67e8f977); }
+.filter-labels { pointer-events: none; }
+.filter-water { pointer-events: none; }
+.filter-flow-path > path:nth-child(2) { animation: filter-flow-dash 1.2s linear infinite paused; }
+.filter-assembly.flow-active .filter-flow-path > path:nth-child(2) { animation-play-state: running; }
+.filter-assembly .filter-flow-path.reverse > path:nth-child(2) { animation-direction: reverse; }
+.filter-stream > path:nth-child(2), .filter-stream > path:nth-child(3) { animation: filter-flow-dash .8s linear infinite; }
+.filter-stream.reverse > path:nth-child(2), .filter-stream.reverse > path:nth-child(3) { animation-direction: reverse; }
+.filter-water-dot { animation: filter-water-drift 3s linear infinite paused; }
+.filter-assembly.flow-active .filter-water-dot { animation-play-state: running; }
+.filter-water-dot.reverse { animation-direction: reverse; }
+.filter-system-flow { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .65rem; }
+.filter-system-node { padding: .65rem .8rem; border: 1px solid #7dd3fc33; border-radius: .75rem; background: #0c1a30; color: #e2e8f0; font-size: .8rem; text-align: center; }
+.filter-system-node button { color: #bae6fd; font-size: .75rem; cursor: pointer; }
+.filter-system-node button:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.filter-system-node.water-node { border-color: #22d3ee55; }
+.filter-system-node.sensor-node { border-color: #22d3ee55; }
+.filter-system-node.sensor-node button { border: 1px solid #22d3ee33; border-radius: .35rem; padding: .2rem .35rem; }
+.filter-system-node.signal-node { border-color: #4ade8055; }
+.filter-system-link { display: block; flex: 1 1 28px; min-width: 24px; max-width: 72px; height: 2px; }
+.filter-system-link.water-link { background: repeating-linear-gradient(to right, #22d3ee 0 6px, transparent 6px 12px); }
+.filter-system-link.signal-link { background: repeating-linear-gradient(to right, #4ade80 0 5px, transparent 5px 10px); animation: fh .8s linear infinite; }
+@keyframes filter-flow-dash { to { stroke-dashoffset: -46px; } }
+@keyframes filter-water-drift { to { transform: translateX(190px); } }
+@media (max-width: 640px) {
+  .filter-assembly { min-height: 220px; }
+  .filter-assembly text { font-size: 9px; }
+  .filter-assembly text.filter-svg-small { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .filter-system-link.signal-link { animation: none; }
+  .filter-stream > path:nth-child(2), .filter-stream > path:nth-child(3) { animation: none; }
+}
